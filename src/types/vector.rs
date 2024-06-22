@@ -100,6 +100,10 @@ impl Vector {
     Ok(sum)
   }
 
+  pub fn set(&mut self, index: usize, value: f32) {
+    self.data[index] = value;
+  }
+
   pub fn size(&self) -> usize {
     self.size
   }
