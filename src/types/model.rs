@@ -1,6 +1,7 @@
 use super::vector::Vector;
 use crate::constants::*;
 use serde::{Deserialize, Serialize};
+use std::{error::Error, fs};
 
 pub struct Model {
   weights: Vec<Vector>,
@@ -28,10 +29,6 @@ impl Model {
   }
 
   pub fn predict(&self, x: Vector) -> Result<Vector, String> {
-    if x.len() != INPUT_SIZE {
-      return Err("x must be of len 784 (28 * 28)".to_owned());
-    }
-
     let mut result: Vec<f32> = vec![];
 
     for weights in &self.weights {
@@ -42,6 +39,15 @@ impl Model {
       Vector::new(Some(result), None)?.add(&self.bias)?,
     ))
   }
+
+  /*pub fn train(
+    &mut self,
+    train_x: Vec<Vector>,
+    train_y: Vec<Vector>,
+    epochs: usize,
+    learning_rate: f32,
+  ) {
+  } ducc pls make this asap kthxbye :pray:*/
 
   pub fn weights(&self) -> &Vec<Vector> {
     &self.weights
@@ -54,6 +60,19 @@ impl Model {
   pub fn epoch(&self) -> usize {
     self.epoch
   }
+
+  pub fn load_from(path: &str) -> Result<Self, Box<dyn Error>> {
+    let ckpt = fs::read_to_string(path)?;
+    let ckpt: DeSerializableModel = serde_json::from_str(&ckpt)?;
+    Ok(ckpt.to_model())
+  }
+
+  pub fn save_to(&self, path: &str) -> Result<(), Box<dyn Error>> {
+    Ok(fs::write(
+      path,
+      serde_json::to_string(&DeSerializableModel::from_model(&self))?,
+    )?)
+  }
 }
 
 #[derive(Deserialize, Serialize)]
@@ -64,7 +83,7 @@ pub struct DeSerializableModel {
 }
 
 impl DeSerializableModel {
-  pub fn from_model(model: Model) -> Self {
+  pub fn from_model(model: &Model) -> Self {
     let mut weights: Vec<Vec<f32>> = vec![];
 
     for vector in model.weights() {
