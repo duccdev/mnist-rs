@@ -100,6 +100,10 @@ impl Vector {
     Ok(sum)
   }
 
+  pub fn exp(&self) -> Vector {
+    Vector::new(Some(self.data.iter().map(|x| x.exp()).collect()), None).unwrap()
+  }
+
   pub fn sum(&self) -> f32 {
     let mut sum: f32 = 0.0;
 
