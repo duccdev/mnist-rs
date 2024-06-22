@@ -23,6 +23,26 @@ impl Model {
     }
   }
 
+  fn softmax(x: Vector) -> Vector {
+    x.exp().divide_scalar(x.exp().sum())
+  }
+
+  pub fn predict(&self, x: Vector) -> Result<Vector, String> {
+    if x.len() != INPUT_SIZE {
+      return Err("x must be of len 784 (28 * 28)".to_owned());
+    }
+
+    let mut result: Vec<f32> = vec![];
+
+    for weights in &self.weights {
+      result.push(weights.dot(&x)?);
+    }
+
+    Ok(Self::softmax(
+      Vector::new(Some(result), None)?.add(&self.bias)?,
+    ))
+  }
+
   pub fn weights(&self) -> &Vec<Vector> {
     &self.weights
   }
