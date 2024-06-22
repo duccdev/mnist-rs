@@ -3,7 +3,7 @@ pub struct XorShift32 {
 }
 
 impl XorShift32 {
-  fn new(seed: u32) -> Self {
+  pub fn new(seed: u32) -> Self {
     Self { state: seed }
   }
 
