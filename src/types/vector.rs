@@ -52,6 +52,19 @@ impl Vector {
     })
   }
 
+  pub fn multiply_scalar(&self, scalar: f32) -> Vector {
+    let mut data = vec![0.0; self.size];
+
+    for i in 0..self.size {
+      data[i] = self.data[i] * scalar;
+    }
+
+    Vector {
+      data,
+      size: self.size,
+    }
+  }
+
   pub fn divide(&self, other: &Vector) -> Result<Vector, String> {
     if self.size != other.size {
       return Err("Vectors must be the same size".to_string());
@@ -67,6 +80,19 @@ impl Vector {
       data,
       size: self.size,
     })
+  }
+
+  pub fn divide_scalar(&self, scalar: f32) -> Vector {
+    let mut data = vec![0.0; self.size];
+
+    for i in 0..self.size {
+      data[i] = self.data[i] / scalar;
+    }
+
+    Vector {
+      data,
+      size: self.size,
+    }
   }
 
   pub fn add(&self, other: &Vector) -> Result<Vector, String> {
@@ -86,6 +112,19 @@ impl Vector {
     })
   }
 
+  pub fn add_scalar(&self, scalar: f32) -> Vector {
+    let mut data = vec![0.0; self.size];
+
+    for i in 0..self.size {
+      data[i] = self.data[i] + scalar;
+    }
+
+    Vector {
+      data,
+      size: self.size,
+    }
+  }
+
   pub fn subtract(&self, other: &Vector) -> Result<Vector, String> {
     if self.size != other.size {
       return Err("Vectors must be the same size".to_string());
@@ -101,6 +140,19 @@ impl Vector {
       data,
       size: self.size,
     })
+  }
+
+  pub fn subtract_scalar(&self, scalar: f32) -> Vector {
+    let mut data = vec![0.0; self.size];
+
+    for i in 0..self.size {
+      data[i] = self.data[i] - scalar;
+    }
+
+    Vector {
+      data,
+      size: self.size,
+    }
   }
 
   pub fn dot(&self, other: &Vector) -> Result<f32, String> {
