@@ -1,75 +1,74 @@
 use super::vector::Vector;
+use crate::constants::*;
 use serde::{Deserialize, Serialize};
 
 pub struct Model {
-  layer_1: Vector,
-  layer_2: Vector,
-  bias_1: Vector,
-  bias_2: Vector,
+  weights: Vec<Vector>,
+  bias: Vector,
+  epoch: usize,
 }
 
 impl Model {
   pub fn new() -> Self {
+    let mut weights: Vec<Vector> = Vec::new();
+
+    for _ in 0..OUTPUT_SIZE {
+      weights.push(Vector::new(Some(vec![0.0; INPUT_SIZE]), None).unwrap());
+    }
+
     Self {
-      layer_1: Vector::new(None, Some(28 * 28)).unwrap(),
-      layer_2: Vector::new(None, Some(28 * 28)).unwrap(),
-      bias_1: Vector::new(None, Some(28 * 28)).unwrap(),
-      bias_2: Vector::new(None, Some(28 * 28)).unwrap(),
+      weights,
+      bias: Vector::new(None, Some(OUTPUT_SIZE)).unwrap(),
+      epoch: 0,
     }
   }
 
-  pub fn train(
-    &mut self,
-    x_train: Vec<Vector>,
-    y_train: Vec<u8>,
-    epochs: Option<usize>,
-    stop_at_loss: Option<f32>,
-    learning_rate: Option<f32>,
-  ) {
-    todo!();
+  pub fn weights(&self) -> &Vec<Vector> {
+    &self.weights
   }
 
-  pub fn layer_1(&self) -> &Vector {
-    &self.layer_1
+  pub fn bias(&self) -> &Vector {
+    &self.bias
   }
 
-  pub fn layer_2(&self) -> &Vector {
-    &self.layer_2
-  }
-
-  pub fn bias_1(&self) -> &Vector {
-    &self.bias_1
-  }
-
-  pub fn bias_2(&self) -> &Vector {
-    &self.bias_2
+  pub fn epoch(&self) -> usize {
+    self.epoch
   }
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct DeSerializableModel {
-  layer_1: Vec<f32>,
-  layer_2: Vec<f32>,
-  bias_1: Vec<f32>,
-  bias_2: Vec<f32>,
+  weights: Vec<Vec<f32>>,
+  bias: Vec<f32>,
+  epoch: usize,
 }
 
 impl DeSerializableModel {
   pub fn from_model(model: Model) -> Self {
+    let mut weights: Vec<Vec<f32>> = vec![];
+
+    for vector in model.weights() {
+      weights.push(vector.to_vec().clone());
+    }
+
     Self {
-      layer_1: model.layer_1().to_vec().clone(),
-      layer_2: model.layer_2().to_vec().clone(),
-      bias_1: model.bias_1().to_vec().clone(),
-      bias_2: model.bias_2().to_vec().clone(),
+      weights,
+      bias: model.bias().to_vec().clone(),
+      epoch: model.epoch().clone(),
     }
   }
 
   pub fn to_model(&self) -> Model {
+    let mut weights: Vec<Vector> = vec![];
+
+    for w_vec in self.weights.clone() {
+      weights.push(Vector::new(Some(w_vec), None).unwrap());
+    }
+
     Model {
-      layer_1: Vector::new(Some(self.layer_1.clone()), None).unwrap(),
-      layer_2: Vector::new(Some(self.layer_2.clone()), None).unwrap(),
-      bias_1: Vector::new(Some(self.bias_1.clone()), None).unwrap(),
-      bias_2: Vector::new(Some(self.bias_2.clone()), None).unwrap(),
+      weights,
+      bias: Vector::new(Some(self.bias.clone()), None).unwrap(),
+      epoch: self.epoch,
     }
   }
 }
