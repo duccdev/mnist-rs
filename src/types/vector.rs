@@ -52,6 +52,23 @@ impl Vector {
     })
   }
 
+  pub fn divide(&self, other: &Vector) -> Result<Vector, String> {
+    if self.size != other.size {
+      return Err("Vectors must be the same size".to_string());
+    }
+
+    let mut data = vec![0.0; self.size];
+
+    for i in 0..self.size {
+      data[i] = self.data[i] / other.data[i];
+    }
+
+    Ok(Vector {
+      data,
+      size: self.size,
+    })
+  }
+
   pub fn add(&self, other: &Vector) -> Result<Vector, String> {
     if self.size != other.size {
       return Err("Vectors must be the same size".to_string());
@@ -101,7 +118,10 @@ impl Vector {
   }
 
   pub fn exp(&self) -> Vector {
-    Vector::new(Some(self.data.iter().map(|x| x.exp()).collect()), None).unwrap()
+    Vector {
+      data: self.data.iter().map(|x| x.exp()).collect(),
+      size: self.size,
+    }
   }
 
   pub fn sum(&self) -> f32 {
@@ -122,7 +142,7 @@ impl Vector {
     self.data[index]
   }
 
-  pub fn size(&self) -> usize {
+  pub fn len(&self) -> usize {
     self.size
   }
 
