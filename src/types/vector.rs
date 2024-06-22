@@ -91,7 +91,7 @@ impl Vector {
       return Err("Vectors must be the same size".to_string());
     }
 
-    let mut sum = 0.0;
+    let mut sum: f32 = 0.0;
 
     for i in 0..self.size {
       sum += self.data[i] * other.data[i];
@@ -100,8 +100,22 @@ impl Vector {
     Ok(sum)
   }
 
+  pub fn sum(&self) -> f32 {
+    let mut sum: f32 = 0.0;
+
+    for value in &self.data {
+      sum += value;
+    }
+
+    sum
+  }
+
   pub fn set(&mut self, index: usize, value: f32) {
     self.data[index] = value;
+  }
+
+  pub fn get(&self, index: usize) -> f32 {
+    self.data[index]
   }
 
   pub fn size(&self) -> usize {
