@@ -61,17 +61,28 @@ impl Model {
     self.epoch
   }
 
-  pub fn load_from(path: &str) -> Result<Self, Box<dyn Error>> {
+  pub fn load_from_file(path: &str) -> Result<Self, Box<dyn Error>> {
     let ckpt = fs::read_to_string(path)?;
     let ckpt: DeSerializableModel = serde_json::from_str(&ckpt)?;
     Ok(ckpt.to_model())
   }
 
-  pub fn save_to(&self, path: &str) -> Result<(), Box<dyn Error>> {
+  pub fn load_from_string(ckpt: String) -> Result<Self, Box<dyn Error>> {
+    let ckpt: DeSerializableModel = serde_json::from_str(&ckpt)?;
+    Ok(ckpt.to_model())
+  }
+
+  pub fn save_to_file(&self, path: &str) -> Result<(), Box<dyn Error>> {
     Ok(fs::write(
       path,
       serde_json::to_string(&DeSerializableModel::from_model(&self))?,
     )?)
+  }
+
+  pub fn dump_ckpt(&self) -> Result<String, Box<dyn Error>> {
+    Ok(serde_json::to_string(&DeSerializableModel::from_model(
+      &self,
+    ))?)
   }
 }
 
