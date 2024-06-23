@@ -29,7 +29,7 @@ impl Model {
   }
 
   pub fn predict(&self, x: Vector) -> Result<Vector, String> {
-    let mut result: Vec<f32> = vec![];
+    let mut result: Vec<f64> = vec![];
 
     for weights in &self.weights {
       result.push(weights.dot(&x)?);
@@ -45,7 +45,7 @@ impl Model {
     train_x: Vec<Vector>,
     train_y: Vec<Vector>,
     epochs: usize,
-    learning_rate: f32,
+    learning_rate: f64,
   ) {
   } ducc pls make this asap kthxbye :pray:*/
 
@@ -88,14 +88,14 @@ impl Model {
 
 #[derive(Deserialize, Serialize)]
 pub struct DeSerializableModel {
-  weights: Vec<Vec<f32>>,
-  bias: Vec<f32>,
+  weights: Vec<Vec<f64>>,
+  bias: Vec<f64>,
   epoch: usize,
 }
 
 impl DeSerializableModel {
   pub fn from_model(model: &Model) -> Self {
-    let mut weights: Vec<Vec<f32>> = vec![];
+    let mut weights: Vec<Vec<f64>> = vec![];
 
     for vector in model.weights() {
       weights.push(vector.to_vec().clone());
