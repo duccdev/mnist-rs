@@ -14,7 +14,7 @@ impl Model {
     let mut weights: Vec<Vector> = Vec::new();
 
     for _ in 0..OUTPUT_SIZE {
-      weights.push(Vector::new(Some(vec![0.0; INPUT_SIZE]), None).unwrap());
+      weights.push(Vector::new(None, Some(INPUT_SIZE)).unwrap());
     }
 
     Self {
