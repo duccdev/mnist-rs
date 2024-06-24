@@ -1,10 +1,10 @@
 pub struct Vector {
-  data: Vec<f64>,
+  data: Vec<f32>,
   size: usize,
 }
 
 impl Vector {
-  pub fn new(data: Option<Vec<f64>>, size: Option<usize>) -> Result<Vector, String> {
+  pub fn new(data: Option<Vec<f32>>, size: Option<usize>) -> Result<Vector, String> {
     if data.is_none() && size.is_none() {
       return Err("Either data or size must be provided".to_string());
     }
@@ -52,7 +52,7 @@ impl Vector {
     })
   }
 
-  pub fn multiply_scalar(&self, scalar: f64) -> Vector {
+  pub fn multiply_scalar(&self, scalar: f32) -> Vector {
     let mut data = vec![0.0; self.size];
 
     for i in 0..self.size {
@@ -82,7 +82,7 @@ impl Vector {
     })
   }
 
-  pub fn divide_scalar(&self, scalar: f64) -> Vector {
+  pub fn divide_scalar(&self, scalar: f32) -> Vector {
     let mut data = vec![0.0; self.size];
 
     for i in 0..self.size {
@@ -112,7 +112,7 @@ impl Vector {
     })
   }
 
-  pub fn add_scalar(&self, scalar: f64) -> Vector {
+  pub fn add_scalar(&self, scalar: f32) -> Vector {
     let mut data = vec![0.0; self.size];
 
     for i in 0..self.size {
@@ -142,7 +142,7 @@ impl Vector {
     })
   }
 
-  pub fn subtract_scalar(&self, scalar: f64) -> Vector {
+  pub fn subtract_scalar(&self, scalar: f32) -> Vector {
     let mut data = vec![0.0; self.size];
 
     for i in 0..self.size {
@@ -155,12 +155,12 @@ impl Vector {
     }
   }
 
-  pub fn dot(&self, other: &Vector) -> Result<f64, String> {
+  pub fn dot(&self, other: &Vector) -> Result<f32, String> {
     if self.size != other.size {
       return Err("Vectors must be the same size".to_string());
     }
 
-    let mut sum: f64 = 0.0;
+    let mut sum: f32 = 0.0;
 
     for i in 0..self.size {
       sum += self.data[i] * other.data[i];
@@ -176,8 +176,8 @@ impl Vector {
     }
   }
 
-  pub fn sum(&self) -> f64 {
-    let mut sum: f64 = 0.0;
+  pub fn sum(&self) -> f32 {
+    let mut sum: f32 = 0.0;
 
     for value in &self.data {
       sum += value;
@@ -186,11 +186,11 @@ impl Vector {
     sum
   }
 
-  pub fn set(&mut self, index: usize, value: f64) {
+  pub fn set(&mut self, index: usize, value: f32) {
     self.data[index] = value;
   }
 
-  pub fn get(&self, index: usize) -> f64 {
+  pub fn get(&self, index: usize) -> f32 {
     self.data[index]
   }
 
@@ -198,7 +198,7 @@ impl Vector {
     self.size
   }
 
-  pub fn to_vec(&self) -> &Vec<f64> {
+  pub fn to_vec(&self) -> &Vec<f32> {
     &self.data
   }
 }
