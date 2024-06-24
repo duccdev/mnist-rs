@@ -6,7 +6,7 @@ pub struct Vector {
 impl Vector {
   pub fn new(data: Option<Vec<f32>>, size: Option<usize>) -> Result<Vector, String> {
     if data.is_none() && size.is_none() {
-      return Err("Either data or size must be provided".to_string());
+      return Err("Either data or size must be provided".to_owned());
     }
 
     if data.is_some() && size.is_some() {
@@ -14,7 +14,7 @@ impl Vector {
       let size = size.unwrap();
 
       if data.len() != size {
-        return Err("Data and size must be the same length".to_string());
+        return Err("Data and size must be the same length".to_owned());
       }
 
       return Ok(Vector { data, size });
@@ -37,7 +37,7 @@ impl Vector {
 
   pub fn multiply(&self, other: &Vector) -> Result<Vector, String> {
     if self.size != other.size {
-      return Err("Vectors must be the same size".to_string());
+      return Err("Vectors must be the same size".to_owned());
     }
 
     let mut data = vec![0.0; self.size];
@@ -67,7 +67,7 @@ impl Vector {
 
   pub fn divide(&self, other: &Vector) -> Result<Vector, String> {
     if self.size != other.size {
-      return Err("Vectors must be the same size".to_string());
+      return Err("Vectors must be the same size".to_owned());
     }
 
     let mut data = vec![0.0; self.size];
@@ -97,7 +97,7 @@ impl Vector {
 
   pub fn add(&self, other: &Vector) -> Result<Vector, String> {
     if self.size != other.size {
-      return Err("Vectors must be the same size".to_string());
+      return Err("Vectors must be the same size".to_owned());
     }
 
     let mut data = vec![0.0; self.size];
@@ -127,7 +127,7 @@ impl Vector {
 
   pub fn subtract(&self, other: &Vector) -> Result<Vector, String> {
     if self.size != other.size {
-      return Err("Vectors must be the same size".to_string());
+      return Err("Vectors must be the same size".to_owned());
     }
 
     let mut data = vec![0.0; self.size];
@@ -157,7 +157,7 @@ impl Vector {
 
   pub fn dot(&self, other: &Vector) -> Result<f32, String> {
     if self.size != other.size {
-      return Err("Vectors must be the same size".to_string());
+      return Err("Vectors must be the same size".to_owned());
     }
 
     let mut sum: f32 = 0.0;
