@@ -169,6 +169,7 @@ impl Vector {
     Ok(sum)
   }
 
+  #[inline]
   pub fn exp(&self) -> Vector {
     Vector {
       data: self.data.iter().map(|x| x.exp()).collect(),
@@ -200,22 +201,27 @@ impl Vector {
     max_index
   }
 
+  #[inline]
   pub fn set(&mut self, index: usize, value: f32) {
     self.data[index] = value;
   }
 
+  #[inline]
   pub fn get(&self, index: usize) -> f32 {
     self.data[index]
   }
 
+  #[inline]
   pub fn len(&self) -> usize {
     self.size
   }
 
+  #[inline]
   pub fn is_empty(&self) -> bool {
     false
   }
 
+  #[inline]
   pub fn to_vec(&self) -> &Vec<f32> {
     &self.data
   }
