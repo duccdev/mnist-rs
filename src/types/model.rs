@@ -78,6 +78,45 @@ impl Model {
     Ok(Vector::new(Some(deriv), None)?)
   }
 
+  pub fn evaluate(&self, test_x: Vec<Vector>, test_y: Vec<Vector>) -> Result<(f32, f32), String> {
+    let mut total_loss = 0.0;
+    let mut correct_predictions = 0.0;
+
+    for (x, y) in test_x.iter().zip(test_y.iter()) {
+      let output = self.predict(x)?;
+
+      let loss = self.loss(y, &output)?;
+      total_loss += loss;
+
+      let predicted_class = output
+        .to_vec()
+        .iter()
+        .cloned()
+        .enumerate()
+        .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
+        .unwrap()
+        .0;
+
+      let true_class = y
+        .to_vec()
+        .iter()
+        .cloned()
+        .enumerate()
+        .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
+        .unwrap()
+        .0;
+
+      if predicted_class == true_class {
+        correct_predictions += 1.0;
+      }
+    }
+
+    let avg_loss = total_loss / test_x.len() as f32;
+    let accuracy = correct_predictions / test_x.len() as f32;
+
+    Ok((avg_loss, accuracy))
+  }
+
   pub fn train(
     &mut self,
     train_x: Vec<Vector>,
