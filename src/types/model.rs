@@ -84,30 +84,15 @@ impl Model {
     let mut correct_predictions = 0.0;
 
     for (x, y) in test_x.iter().zip(test_y.iter()) {
-      let output = self.predict(x)?;
+      let pred = self.predict(x)?;
 
-      let loss = self.loss(y, &output)?;
+      let loss = self.loss(y, &pred)?;
       total_loss += loss;
 
-      let predicted_class = output
-        .to_vec()
-        .iter()
-        .cloned()
-        .enumerate()
-        .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
-        .unwrap()
-        .0;
+      let y_true = y.argmax();
+      let y_pred = pred.argmax();
 
-      let true_class = y
-        .to_vec()
-        .iter()
-        .cloned()
-        .enumerate()
-        .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
-        .unwrap()
-        .0;
-
-      if predicted_class == true_class {
+      if y_pred == y_true {
         correct_predictions += 1.0;
       }
     }
