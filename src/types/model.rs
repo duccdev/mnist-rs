@@ -75,7 +75,7 @@ impl Model {
       deriv[i] = y_pred_clipped[i] - y_true.get(i);
     }
 
-    Ok(Vector::new(Some(deriv), None)?)
+    Vector::new(Some(deriv), None)
   }
 
   pub fn evaluate(&self, test_x: Vec<Vector>, test_y: Vec<Vector>) -> Result<(f32, f32), String> {
@@ -129,34 +129,19 @@ impl Model {
       let mut accuracy = 0.0;
 
       for (x, y) in train_x.iter().zip(train_y.iter()) {
-        let output = self.predict(x)?;
+        let pred = self.predict(x)?;
 
-        let loss = self.loss(y, &output)?;
+        let loss = self.loss(y, &pred)?;
         total_loss += loss;
 
-        let predicted_class = output
-          .to_vec()
-          .iter()
-          .cloned()
-          .enumerate()
-          .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
-          .unwrap()
-          .0;
+        let y_true = y.argmax();
+        let y_pred = pred.argmax();
 
-        let true_class = y
-          .to_vec()
-          .iter()
-          .cloned()
-          .enumerate()
-          .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
-          .unwrap()
-          .0;
-
-        if predicted_class == true_class {
+        if y_true == y_pred {
           accuracy += 1.0;
         }
 
-        let grad = self.loss_deriv(y, &output)?;
+        let grad = self.loss_deriv(y, &pred)?;
 
         for (i, weight) in self.weights.iter_mut().enumerate() {
           let grad_w = x
@@ -228,13 +213,13 @@ impl Model {
   pub fn save_to_file(&self, path: &str) -> Result<(), Box<dyn Error>> {
     Ok(fs::write(
       path,
-      serde_json::to_string(&DeSerializableModel::from_model(&self))?,
+      serde_json::to_string(&DeSerializableModel::from_model(self))?,
     )?)
   }
 
   pub fn dump_ckpt(&self) -> Result<String, Box<dyn Error>> {
     Ok(serde_json::to_string(&DeSerializableModel::from_model(
-      &self,
+      self,
     ))?)
   }
 }
@@ -257,7 +242,7 @@ impl DeSerializableModel {
     Self {
       weights,
       bias: model.bias().to_vec().clone(),
-      epoch: model.epoch().clone(),
+      epoch: model.epoch(),
     }
   }
 

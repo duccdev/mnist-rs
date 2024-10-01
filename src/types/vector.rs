@@ -186,6 +186,20 @@ impl Vector {
     sum
   }
 
+  pub fn argmax(&self) -> usize {
+    let mut max_index = 0;
+    let mut max_value = self.data[0];
+
+    for (i, &value) in self.data.iter().enumerate() {
+      if value > max_value {
+        max_value = value;
+        max_index = i;
+      }
+    }
+
+    max_index
+  }
+
   pub fn set(&mut self, index: usize, value: f32) {
     self.data[index] = value;
   }
@@ -196,6 +210,10 @@ impl Vector {
 
   pub fn len(&self) -> usize {
     self.size
+  }
+
+  pub fn is_empty(&self) -> bool {
+    false
   }
 
   pub fn to_vec(&self) -> &Vec<f32> {
