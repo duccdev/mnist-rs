@@ -4,17 +4,23 @@ use std::error::Error;
 use std::fs::File;
 use std::io::Read;
 
-type Dataset = (Vec<Vector>, Vector, Vec<Vector>, Vector);
+type Dataset = (Vec<Vector>, Vec<Vector>, Vec<Vector>, Vec<Vector>);
 
 const TRAIN_SIZE: usize = 60000;
 const X_ENTRY_SIZE: usize = 784;
 const TEST_SIZE: usize = 10000;
 
+fn one_hot_encode(label: u8) -> Vector {
+  let mut one_hot = vec![0.0; 10];
+  one_hot[label as usize] = 1.0;
+  Vector::new(Some(one_hot), None).unwrap()
+}
+
 pub fn load_from_binary(bytes: Vec<u8>) -> Dataset {
   let mut train_x: Vec<Vector> = vec![];
-  let mut train_y: Vec<f32> = vec![];
+  let mut train_y: Vec<Vector> = vec![];
   let mut test_x: Vec<Vector> = vec![];
-  let mut test_y: Vec<f32> = vec![];
+  let mut test_y: Vec<Vector> = vec![];
 
   let train_x_offset = 0;
   let train_y_offset = train_x_offset + (TRAIN_SIZE * X_ENTRY_SIZE);
@@ -31,8 +37,8 @@ pub fn load_from_binary(bytes: Vec<u8>) -> Dataset {
   }
 
   for i in 0..TRAIN_SIZE {
-    let y_value = bytes[train_y_offset + i] as f32;
-    train_y.push(y_value);
+    let y_value = bytes[train_y_offset + i];
+    train_y.push(one_hot_encode(y_value));
   }
 
   for i in 0..TEST_SIZE {
@@ -45,16 +51,11 @@ pub fn load_from_binary(bytes: Vec<u8>) -> Dataset {
   }
 
   for i in 0..TEST_SIZE {
-    let y_value = bytes[test_y_offset + i] as f32;
-    test_y.push(y_value);
+    let y_value = bytes[test_y_offset + i];
+    test_y.push(one_hot_encode(y_value));
   }
 
-  (
-    train_x,
-    Vector::new(Some(train_y), None).unwrap(),
-    test_x,
-    Vector::new(Some(test_y), None).unwrap(),
-  )
+  (train_x, train_y, test_x, test_y)
 }
 
 pub fn load_from_gzip(path: &str) -> Result<Dataset, Box<dyn Error>> {
